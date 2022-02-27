@@ -14,8 +14,14 @@ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-lineage
 PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay/packages/apps/CarrierConfig
 
-# APEX
-OVERRIDE_TARGET_FLATTEN_APEX := true
+# Enable updatable APEX
+ifeq ($(ENABLE_APEX), true)
+TARGET_SUPPORTS_UPDATABLE_APEX := true
+$(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
+$(call inherit-product-if-exists, vendor/prebuilts/config/apex.mk)
+else
+PRODUCT_PRODUCT_PROPERTIES += ro.apex.updatable=false
+endif
 OVERRIDE_PRODUCT_COMPRESSED_APEX := false
 
 # Screen density
